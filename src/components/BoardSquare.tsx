@@ -1,10 +1,32 @@
+import { useDrop } from 'react-dnd';
 import styled from 'styled-components';
 
 const BoardSquare = ({ x }: any) => {
+  const [{ isOver }, drop] = useDrop(() => ({
+    // The type (or types) to accept - strings or symbols
+    accept: 'BOX',
+    // Props to collect
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }));
+
   return x === 7 || x === 21 ? (
-    <Hex style={{ marginLeft: '55px' }}></Hex>
+    <Hex
+      style={{
+        marginLeft: '55px',
+        backgroundColor: isOver ? 'green' : 'white',
+      }}
+      ref={drop}
+      role={'Dustbin'}
+    ></Hex>
   ) : (
-    <Hex></Hex>
+    <Hex
+      style={{ backgroundColor: isOver ? 'green' : 'white' }}
+      ref={drop}
+      role={'Dustbin'}
+    ></Hex>
   );
 };
 
@@ -26,7 +48,7 @@ const Hex = styled.div`
     -ms-transform: scaleY(0.5774) rotate(-45deg);
     transform: scaleY(0.5774) rotate(-45deg);
     background-color: inherit;
-    left: 12.6447px;
+    left: 12.5px;
   }
 
   &:before {
