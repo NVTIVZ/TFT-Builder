@@ -1,19 +1,20 @@
+import { useDraggable } from '@dnd-kit/core';
 import styled from 'styled-components';
-import { DragSourceMonitor, useDrag } from 'react-dnd';
 
-const Item = () => {
-  const [{ isDragging }, drag] = useDrag({
-    type: 'BOX',
-    collect: (monitor: DragSourceMonitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+const Item = (props: any) => {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: 'draggable',
   });
 
-  const opacity = isDragging ? 0.4 : 1;
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   return (
-    <Champion ref={drag} style={{ opacity }}>
-      <img src="images/Trundle.jpg" width="125px" alt="trundle" />
+    <Champion ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      {props.children}
     </Champion>
   );
 };
@@ -21,6 +22,7 @@ const Item = () => {
 const Champion = styled.div`
   width: 125px;
   height: 125px;
+  z-index: 99;
 `;
 
 export default Item;
